@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engenharia de Prompts - Interativo (Com Rodapé)</title>
+    
+    <style>
+        /* Estilos Gerais Simples */
+        body {
+            font-family: sans-serif; 
+            line-height: 1.6;
+            margin: 0; padding: 20px; 
+            background-color: #f4f4f4; 
+            color: #333;
+            /* Adiciona padding-bottom para garantir espaço para o rodapé */
+            padding-bottom: 60px; 
+        }
+        #container {
+            max-width: 800px; 
+            margin: 20px auto;
+            padding: 20px; 
+            background-color: #fff; 
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            border: 1px solid #ddd; 
+            /* Adiciona um padding inferior para não colar o conteúdo no rodapé */
+            padding-bottom: 40px; 
+        }
+        h1, h2 {
+            color: #0056b3; /* Azul */
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 { font-size: 2.0em; }
+        h2 { font-size: 1.5em; }
+        hr { border: 0; height: 1px; background: #ccc; margin: 30px 0; }
+        p { margin-bottom: 1em; }
+
+        /* Estilos para a imagem ilustrativa */
+        #imagem-ilustrativa {
+            display: block; 
+            max-width: 60%; 
+            height: auto; 
+            margin-top: 15px; 
+            margin-bottom: 30px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+
+        /* Secção Explorador */
+        #explorer { margin-bottom: 30px; }
+        #botoesTecnicas {
+            display: flex; flex-wrap: wrap; gap: 10px; 
+            margin-bottom: 20px; justify-content: center;
+        }
+        .botao-tecnica {
+            padding: 10px 15px; background-color: #e0e0e0; border: 1px solid #ccc;
+            border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;
+            font-size: 0.9em; color: #333;
+        }
+        .botao-tecnica:hover { background-color: #dcdcdc; }
+        .botao-tecnica.ativo { background-color: #0056b3; color: white; font-weight: bold; border-color: #003d80; }
+        
+        #infoTecnica {
+            background-color: #f9f9f9; border: 1px solid #eee; padding: 15px;
+            border-radius: 5px; min-height: 100px; 
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #infoTecnica.visivel { opacity: 1; transform: translateY(0); }
+        #infoTecnica h3 { margin-top: 0; color: #0056b3; font-size: 1.2em; margin-bottom: 10px; }
+        #infoTecnica strong { color: #333; font-weight: bold; }
+        #infoTecnica pre { 
+             background-color: #eef; border: 1px dashed #ccc; padding: 10px; 
+             margin-top: 10px; white-space: pre-wrap; word-wrap: break-word;
+             font-family: monospace; font-size: 0.95em;
+         }
+        #infoTecnica .exemplo-mau { border-left: 4px solid #dc3545; }
+        #infoTecnica .exemplo-bom { border-left: 4px solid #28a745; }
+
+        /* Estilos do Quiz Simples */
+        #quiz { margin-bottom: 30px; }
+        #quiz-container { background-color: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 5px; }
+        #questao { font-size: 1.1em; font-weight: bold; margin-bottom: 15px; color: #333; }
+        #questao pre { 
+             background-color: #f0f0f0; border: 1px solid #ddd; padding: 8px; 
+             margin-top: 8px; white-space: pre-wrap; word-wrap: break-word;
+             font-family: monospace; font-size: 0.9em;
+         }
+        #opcoes button { display: block; width: 100%; padding: 12px; margin-bottom: 10px; background-color: #e7e7e7; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; text-align: left; transition: background-color 0.3s ease; color: #333; font-size: 1em; }
+        #opcoes button:hover:not([disabled]) { background-color: #dcdcdc; }
+        #opcoes button pre { 
+             background-color: #fff; border: 1px dashed #ccc; padding: 8px; 
+             margin: 5px 0 0 0; white-space: pre-wrap; word-wrap: break-word;
+             font-family: monospace; font-size: 0.9em;
+         }
+        #opcoes button.correta { background-color: #90ee90; border-color: #5cb85c; font-weight: bold; }
+        #opcoes button.errada { background-color: #f08080; border-color: #d9534f; font-weight: bold; }
+        #opcoes button:disabled { cursor: default; opacity: 0.7; }
+        #botaoProximo { display: block; width: 100%; padding: 12px; background-color: #0056b3; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; margin-top: 20px; transition: background-color 0.3s ease; }
+        #botaoProximo:hover { background-color: #003d80; }
+        #feedback { margin-top: 15px; font-weight: bold; min-height: 1.1em; font-size: 1em; text-align: left; padding: 5px; border-radius: 4px; }
+        #feedback.feedback-correto { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        #feedback.feedback-errado { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        #resultadoFinal { font-size: 1.2em; text-align: center; margin-top: 20px; font-weight: bold; color: #333; }
+        #resultadoFinal button { padding: 10px 20px; margin-top: 15px; font-size: 1em; cursor: pointer; background-color: #5dade2; color: white; border: none; border-radius: 5px; }
+        #resultadoFinal button:hover { background-color: #3498db; }
+
+        /* --- ESTILOS PARA O RODAPÉ --- */
+        footer {
+            text-align: center; /* Centra o texto */
+            margin-top: 40px; /* Espaço acima do rodapé, dentro do container */
+            padding-top: 20px; /* Espaço entre a linha e o texto */
+            border-top: 1px solid #eee; /* Linha separadora subtil */
+            font-size: 0.9em; /* Tamanho de letra ligeiramente menor */
+            color: #777; /* Cor cinza para ser discreto */
+        }
+        /* Opcional: Estilizar o parágrafo dentro do footer se necessário */
+        footer p {
+            margin-bottom: 0; /* Remove margem inferior do parágrafo se houver */
+        }
+        /* --- FIM DOS ESTILOS DO RODAPÉ --- */
+
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1>Engenharia de Prompts - Interativo</h1>
+
+        <img id="imagem-ilustrativa" src="NOME_DA_SUA_IMAGEM.png" alt="Ilustração sobre Engenharia de Prompts"> 
+            
+        <section id="explorer">
+             <h2>Explora as Técnicas</h2>
+            <p>Clica numa técnica para aprender mais sobre ela e ver exemplos:</p>
+            <div id="botoesTecnicas">
+                <button class="botao-tecnica" data-tecnica="clareza">Instruções Claras</button>
+                <button class="botao-tecnica" data-tecnica="contexto">Contexto</button>
+                <button class="botao-tecnica" data-tecnica="formato">Formato</button>
+                <button class="botao-tecnica" data-tecnica="exemplos">Exemplos (Few-Shot)</button>
+                <button class="botao-tecnica" data-tecnica="persona">Persona / Papel</button>
+                <button class="botao-tecnica" data-tecnica="passos">Passo-a-Passo</button>
+                <button class="botao-tecnica" data-tecnica="iteracao">Iteração</button>
+            </div>
+            <div id="infoTecnica"> 
+                <p>Seleciona uma técnica acima.</p>
+            </div>
+        </section>
+
+        <hr> 
+
+        <section id="quiz">
+            <h2>Testa os Teus Prompts! (50 Perguntas)</h2>
+            <div id="quiz-container">
+                <div id="questao">A carregar pergunta...</div>
+                <div id="opcoes"></div>
+                <button id="botaoProximo">Verificar / Próxima</button>
+                <div id="feedback"></div>
+                <div id="resultadoFinal"></div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Ricardo Carvalho. Todos os direitos reservados.</p>
+            </footer>
+        </div><script>
+        // O CÓDIGO JAVASCRIPT COMPLETO (EXPLORER + QUIZ ENGINE + 50 PERGUNTAS)
+        // VEM AQUI DENTRO, EXATAMENTE COMO NA RESPOSTA ANTERIOR.
+        // (Omitido aqui para não repetir o bloco gigante de JS, mas ele deve estar aqui)
+
+         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- LÓGICA DO EXPLORADOR DE TÉCNICAS (mantida) ---
+            const botoesTecnica = document.querySelectorAll('.botao-tecnica'); 
+            const infoTecnicaDiv = document.getElementById('infoTecnica');
+            const dadosTecnicas = {
+                clareza: { nome: "Instruções Claras e Específicas", descricao: "Evite ambiguidades. Diga exatamente o que quer que a IA faça, qual o tópico e qual o objetivo.", exemplo_mau: "Mau: Fala-me sobre gestão do tempo.", exemplo_bom: "Bom: Lista 5 técnicas eficazes de gestão do tempo para estudantes universitários, explicando brevemente cada uma." },
+                contexto: { nome: "Fornecer Contexto", descricao: "Dê à IA a informação de fundo necessária para entender o pedido. Se está a resumir um texto, inclua o texto!", exemplo_mau: "Mau: Resume isto.", exemplo_bom: "Bom: Resume o seguinte parágrafo sobre fotossíntese para uma criança de 10 anos:\n'[Parágrafo sobre fotossíntese aqui...]'" },
+                 formato: { nome: "Especificar o Formato de Saída", descricao: "Indique como quer a resposta: uma lista, tabela, parágrafo, JSON, email, etc. Defina o tamanho ou estrutura se necessário.", exemplo_mau: "Mau: Dá-me ideias para um jantar.", exemplo_bom: "Bom: Sugere 3 ideias de jantar rápido (menos de 30 min). Apresenta em formato de lista numerada, com ingredientes principais para cada ideia." },
+                exemplos: { nome: "Dar Exemplos (Few-Shot Learning)", descricao: "Mostrar à IA o padrão desejado com um ou mais exemplos ajuda-a a 'aprender' o que fazer, especialmente para tarefas novas ou com estilo específico.", exemplo_bom: "Bom: Transforma a emoção em emoji.\nExemplo 1:\nInformal: 'A cena correu mal.'\nFormal: 'A situação não decorreu como esperado.'\n\nExemplo 2:\nInformal: 'Temos de despachar isto.'\nFormal: ?" },
+                persona: { nome: "Atribuir uma Persona ou Papel", descricao: "Dizer à IA para agir como um especialista, um professor, um poeta, etc., define o tom, estilo e nível de detalhe da resposta.", exemplo_mau: "Mau: Explica a gravidade.", exemplo_bom: "Bom: Age como um físico divertido e explica o conceito de gravidade de forma simples, como se estivesses a falar para crianças." },
+                passos: { nome: "Dividir em Passo-a-Passo (Chain-of-Thought)", descricao: "Para tarefas complexas, peça à IA para pensar por etapas ou decomponha você mesmo a tarefa em passos sequenciais no prompt.", exemplo_mau: "Mau: Cria um itinerário de viagem para Paris.", exemplo_bom: "Bom: Cria um itinerário de 3 dias para Paris para um casal interessado em arte e gastronomia. Passo 1: Sugere 2 museus principais. Passo 2: Indica 3 bairros bons para explorar restaurantes. Passo 3: Propõe uma atividade noturna para um dos dias." },
+                 iteracao: { nome: "Iteração e Refinamento", descricao: "Raramente o primeiro prompt é perfeito. Analise a resposta da IA. Se não for boa, ajuste o prompt (adicione clareza, contexto, exemplos, etc.) e tente novamente.", exemplo_bom: "Processo:\n1. Prompt Vago: 'Faz um poema.' -> Resposta genérica.\n2. Prompt Refinado: 'Escreve um poema curto (4 versos) sobre a chuva no outono, com um tom melancólico.' -> Resposta muito melhor!" }
+            };
+            function mostrarInfoTecnica(tecnicaId) { /* ... função mantida igual ... */ 
+                 const dados = dadosTecnicas[tecnicaId];
+                 infoTecnicaDiv.classList.remove('visivel');
+                 setTimeout(() => {
+                     if (dados) {
+                         let html = `<h3>${dados.nome}</h3><p>${dados.descricao}</p>`;
+                         if(dados.exemplo_mau) { html += `<pre class="exemplo-mau">${dados.exemplo_mau}</pre>`; }
+                         if(dados.exemplo_bom) { html += `<pre class="exemplo-bom">${dados.exemplo_bom}</pre>`; }
+                         infoTecnicaDiv.innerHTML = html;
+                         botoesTecnica.forEach(btn => { btn.classList.toggle('ativo', btn.getAttribute('data-tecnica') === tecnicaId); });
+                     } else {
+                         infoTecnicaDiv.innerHTML = `<p>Informação não disponível.</p>`;
+                         botoesTecnica.forEach(btn => btn.classList.remove('ativo'));
+                     }
+                     infoTecnicaDiv.classList.add('visivel');
+                 }, 50); 
+             }
+            botoesTecnica.forEach(botao => { botao.addEventListener('click', () => { mostrarInfoTecnica(botao.getAttribute('data-tecnica')); }); });
+
+            // --- LÓGICA DO QUIZ (Com 50 perguntas - mantida) --- 
+            const questaoDiv = document.getElementById('questao');
+            const opcoesDiv = document.getElementById('opcoes');
+            const feedbackDiv = document.getElementById('feedback');
+            const botaoProximo = document.getElementById('botaoProximo');
+            const resultadoFinalDiv = document.getElementById('resultadoFinal');
+            const quizContainer = document.getElementById('quiz-container');
+
+            const perguntasQuiz = [ /* As mesmas 50 perguntas da versão anterior */ 
+                { tipo: 'escolha_melhor', pergunta: "Quer pedir à IA uma lista de compras para fazer um bolo de chocolate. Qual destes prompts é o MAIS EFICAZ?", opcoes: [ { texto: "Ingredientes bolo." }, { texto: "Preciso de coisas para um bolo." }, { texto: "Lista os ingredientes necessários para uma receita simples de bolo de chocolate, em formato de lista de compras (ex: '1. Farinha')." }, { texto: "Bolo de chocolate." } ], respostaCorreta: 2, explicacao: "É específico (ingredientes, bolo simples de chocolate) e define o formato (lista)." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Escreve um email formal para o cliente X a pedir feedback sobre o projeto Y, mencionando o prazo de resposta até sexta-feira.' Qual técnica é mais evidente?", prompt_na_pergunta: null, opcoes: [ { texto: "Exemplos (Few-Shot)" }, { texto: "Instruções Claras e Específicas" }, { texto: "Persona / Papel" }, { texto: "Contexto" } ], respostaCorreta: 1, explicacao: "O prompt detalha exatamente o que fazer, a quem, sobre o quê e inclui um detalhe específico (prazo)." },
+                { tipo: 'escolha_melhor', pergunta: "Precisa de gerar código Python para ler um ficheiro CSV. Qual o melhor prompt?", opcoes: [ { texto: "Código Python CSV." }, { texto: "Faz um script Python." }, { texto: "Gera código Python que usa a biblioteca pandas para ler o ficheiro 'dados.csv' e imprimir as primeiras 5 linhas." }, { texto: "Python para ler ficheiros." } ], respostaCorreta: 2, explicacao: "Especifica a linguagem, a biblioteca (pandas), a ação (ler), o ficheiro e o output desejado (primeiras 5 linhas)." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Não uses linguagem demasiado técnica.' Esta instrução foca-se principalmente em quê?", prompt_na_pergunta: null, opcoes: [ { texto: "Formato" }, { texto: "Contexto" }, { texto: "Clareza (do output)" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "É uma instrução clara sobre o *estilo* do output, visando a clareza para o leitor." },
+                 { tipo: 'escolha_melhor', pergunta: "Quer ideias para nomes de um gato preto. Qual prompt é melhor?", opcoes: [ { texto: "Nomes gato." }, { texto: "Sugere 10 nomes criativos e originais para um gato macho preto." }, { texto: "Gato preto nomes." }, { texto: "Ideias." } ], respostaCorreta: 1, explicacao: "É específico quanto ao número (10), tipo (criativos, originais), género (macho) e característica (preto)." },
+                 { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Escreve sobre Portugal.' Qual a principal falha deste prompt?", prompt_na_pergunta: null, opcoes: [ { texto: "Falta de Persona" }, { texto: "Demasiado Vago / Falta de Especificidade" }, { texto: "Falta de Exemplos" }, { texto: "Formato Incorreto" } ], respostaCorreta: 1, explicacao: "É extremamente vago. Sobre o quê em Portugal? História? Turismo? Comida? Para quem?" },
+                { tipo: 'escolha_melhor', pergunta: "Objetivo: Obter uma definição curta de 'entropia'. Melhor prompt:", opcoes: [ { texto: "Entropia?" }, { texto: "Define entropia em uma frase simples." }, { texto: "O que é entropia, explica tudo." }, { texto: "Termodinâmica." } ], respostaCorreta: 1, explicacao: "Pede a definição e especifica o formato/tamanho desejado (uma frase simples)." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Dado o seguinte email do cliente [email aqui], escreve uma resposta simpática a agradecer o feedback.' Qual técnica é crucial aqui?", prompt_na_pergunta: null, opcoes: [ { texto: "Formato" }, { texto: "Persona" }, { texto: "Contexto" }, { texto: "Passo-a-Passo" } ], respostaCorreta: 2, explicacao: "Incluir o email do cliente ([email aqui]) fornece o contexto essencial para a IA responder adequadamente." },
+                { tipo: 'escolha_melhor', pergunta: "Quer que a IA corrija a gramática de um texto que escreveu. Como fornecer o contexto?", opcoes: [ { texto: "Corrige a gramática." }, { texto: "O meu texto tem erros?" }, { texto: "Revisa a gramática e ortografia do seguinte texto:\n[O seu texto aqui]" }, { texto: "Gramática." } ], respostaCorreta: 2, explicacao: "É essencial fornecer o texto exato que precisa de ser corrigido como contexto." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Resume a reunião.' A IA responde: 'Não tenho informações sobre nenhuma reunião.' Qual o problema?", prompt_na_pergunta: null, opcoes: [ { texto: "Prompt demasiado longo" }, { texto: "Falta de Contexto (atas da reunião)" }, { texto: "Falta de Persona" }, { texto: "Formato de saída não especificado" } ], respostaCorreta: 1, explicacao: "A IA não sabe qual reunião resumir. Era preciso fornecer as notas ou atas como contexto." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Considerando que o utilizador é um novato em programação, explica o que é uma variável.' A primeira parte do prompt serve para:", prompt_na_pergunta: null, opcoes: [ { texto: "Definir Formato" }, { texto: "Dar Exemplo" }, { texto: "Fornecer Contexto (sobre o público)" }, { texto: "Atribuir Persona à IA" } ], respostaCorreta: 2, explicacao: "Informa sobre o nível de conhecimento do público, dando contexto à IA para ajustar a explicação." },
+                { tipo: 'escolha_melhor', pergunta: "Quer traduzir uma frase idiomática (ex: 'Break a leg'). Qual prompt tem mais hipótese de sucesso?", opcoes: [ { texto: "Traduz 'Break a leg'." }, { texto: "O que significa 'Break a leg'?" }, { texto: "Traduz a expressão idiomática inglesa 'Break a leg' para português, explicando o seu significado (desejar boa sorte)." }, { texto: "Inglês para português." } ], respostaCorreta: 2, explicacao: "Fornece o contexto de que é uma expressão idiomática e até o seu significado, ajudando a IA a não fazer uma tradução literal." },
+                { tipo: 'spot_the_flaw', pergunta: "Recebeu um email longo. Prompt: 'Responde a isto.' A IA não sabe o que responder. Porquê?", prompt_na_pergunta: null, opcoes: [ { texto: "Não pediu por favor" }, { texto: "Não especificou o tom da resposta" }, { texto: "Não forneceu o email como contexto E não disse o que responder" }, { texto: "Não deu exemplos" } ], respostaCorreta: 2, explicacao: "Faltou o contexto (o email) e a instrução clara do que era pretendido na resposta." },
+                 { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Com base na persona de cliente 'Jovem Adulto Urbano', sugere atividades de lazer.' Qual técnica está em jogo?", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto (sobre o cliente)" }, { texto: "Formato" }, { texto: "Iteração" }, { texto: "Passo-a-passo" } ], respostaCorreta: 0, explicacao: "A descrição da persona serve como contexto para a IA filtrar as suas sugestões." },
+                 { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Cria uma tabela Markdown com duas colunas: Prós e Contras da energia solar.' Esta instrução foca-se em:", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Persona" }, { texto: "Formato de Saída" }, { texto: "Exemplos" } ], respostaCorreta: 2, explicacao: "Pede explicitamente uma 'tabela Markdown', definindo a estrutura visual da resposta." },
+                { tipo: 'escolha_melhor', pergunta: "Quer comparar dois produtos (A e B). Qual prompt pede o formato mais útil?", opcoes: [ { texto: "Compara A e B." }, { texto: "Diferenças A e B." }, { texto: "Cria uma tabela comparativa entre o Produto A e o Produto B, listando 3 características chave e indicando qual é melhor em cada uma." }, { texto: "A vs B." } ], respostaCorreta: 2, explicacao: "Pede uma comparação estruturada em tabela, focando em características chave." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Extrai os nomes das pessoas mencionadas no texto [texto aqui].' A IA devolve um parágrafo com os nomes misturados. O que faltou?", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto (o texto estava lá)" }, { texto: "Persona" }, { texto: "Especificar o Formato (ex: lista)" }, { texto: "Clareza na tarefa" } ], respostaCorreta: 2, explicacao: "A tarefa era clara, mas faltou pedir o formato desejado para os nomes extraídos (ex: 'numa lista de pontos')." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Gera a resposta em formato JSON com as chaves 'nome' e 'email'.' Qual o foco principal?", prompt_na_pergunta: null, opcoes: [ { texto: "Especificar o Formato (JSON)" }, { texto: "Contexto" }, { texto: "Persona" }, { texto: "Exemplo" } ], respostaCorreta: 0, explicacao: "A instrução para gerar em JSON define explicitamente o formato técnico da saída." },
+                { tipo: 'escolha_melhor', pergunta: "Precisa de um resumo de 100 palavras. Melhor prompt:", opcoes: [ { texto: "Resume [texto]." }, { texto: "Resume o texto [texto] em cerca de 100 palavras." }, { texto: "Faz um resumo curto de [texto]." }, { texto: "Análise de [texto]." } ], respostaCorreta: 1, explicacao: "Especifica o limite de palavras desejado, controlando o formato/tamanho." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Lista os passos.' A IA responde: 'Passos para quê?' O que falhou?", prompt_na_pergunta: null, opcoes: [ { texto: "Falta de Formato" }, { texto: "Falta de Clareza/Contexto (Passos de quê?)" }, { texto: "Falta de Persona" }, { texto: "Prompt demasiado curto" } ], respostaCorreta: 1, explicacao: "Embora peça um formato (lista), não especifica o tópico ou contexto para o qual os passos são necessários." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Escreve 3 bullet points resumindo...' A instrução '3 bullet points' refere-se a:", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Persona" }, { texto: "Clareza" }, { texto: "Formato e Tamanho" } ], respostaCorreta: 3, explicacao: "Define tanto a estrutura (bullet points) como a quantidade (3), controlando formato e tamanho." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt:\nAnalisa o sentimento (Positivo/Negativo/Neutro).\nTexto: 'Adorei o filme!'\nSentimento: Positivo\nTexto: 'O tempo esteve horrível.'\nSentimento: Negativo\nTexto: 'O livro chegou hoje.'\nSentimento:", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Persona" }, { texto: "Exemplos (Few-Shot Learning)" }, { texto: "Passo-a-Passo" } ], respostaCorreta: 2, explicacao: "O prompt fornece exemplos concretos do input e output desejado para ensinar a tarefa à IA." },
+                { tipo: 'escolha_melhor', pergunta: "Quer que a IA escreva emails curtos a confirmar reuniões, sempre no mesmo estilo. Qual a melhor abordagem?", opcoes: [ { texto: "Escreve email a confirmar reunião." }, { texto: "Sê formal nos emails." }, { texto: "Escreve email a confirmar reunião com [Pessoa] dia [Data] às [Hora]. Assunto: Confirmação. Corpo: [Exemplo de corpo de email que gostou]" }, { texto: "Modelo de email." } ], respostaCorreta: 2, explicacao: "Fornecer um exemplo concreto do corpo do email desejado (few-shot) ajuda a IA a replicar o estilo e estrutura." },
+                { tipo: 'identifica_tecnica', pergunta: "Dar 2-3 exemplos de pares pergunta/resposta antes de fazer a pergunta final é uma técnica chamada:", prompt_na_pergunta: null, opcoes: [ { texto: "Zero-Shot" }, { texto: "Few-Shot Prompting" }, { texto: "Chain-of-Thought" }, { texto: "Prompt Chaining" } ], respostaCorreta: 1, explicacao: "'Few-shot' refere-se a dar alguns (poucos) exemplos para guiar a IA." },
+                 { tipo: 'escolha_melhor', pergunta: "Quer extrair moradas de textos. Qual prompt usa melhor a técnica de exemplos?", opcoes: [ { texto: "Encontra moradas no texto: [texto]" }, { texto: "Extrai moradas.\nTexto: 'Visite-nos na Rua das Flores 123, Lisboa.'\nMorada: Rua das Flores 123, Lisboa\nTexto: 'O escritório fica na Av. Central 45, Porto.'\nMorada: ?" }, { texto: "O texto fala de moradas?" }, { texto: "Formata as moradas." } ], respostaCorreta: 1, explicacao: "Mostra claramente o padrão de input (Texto) e output (Morada) desejado através de exemplos." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Categoriza: Maçã (Fruta), Cão (Animal), Carro (?)' A IA responde 'Veículo'. Está bom, mas se quisesse *apenas* a categoria 'Meio de Transporte', o que faltou?", prompt_na_pergunta: null, opcoes: [ { texto: "Mais contexto" }, { texto: "Um exemplo que forçasse essa categoria (ex: Bicicleta -> Meio de Transporte)" }, { texto: "Uma persona" }, { texto: "Pedir formato JSON" } ], respostaCorreta: 1, explicacao: "O exemplo com 'Carro' não era suficientemente específico para a categoria desejada; um exemplo mais direcionado ajudaria." },
+                { tipo: 'identifica_tecnica', pergunta: "A técnica de dar exemplos é MAIS útil quando a tarefa é:", prompt_na_pergunta: null, opcoes: [ { texto: "Muito simples e direta." }, { texto: "Requer um formato ou estilo muito específico, ou é complexa/nova para a IA." }, { texto: "Precisa de ser feita muito rapidamente." }, { texto: "Envolve matemática." } ], respostaCorreta: 1, explicacao: "Os exemplos brilham quando precisamos de guiar a IA em tarefas não triviais ou com requisitos de output muito particulares." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Como um economista cético, analisa os prós e contras da semana de trabalho de 4 dias.' Qual técnica está a definir o tom e a perspetiva?", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Persona / Papel" }, { texto: "Formato" }, { texto: "Exemplos" } ], respostaCorreta: 1, explicacao: "Atribuir o papel de 'economista cético' dita a abordagem e o ponto de vista da IA." },
+                { tipo: 'escolha_melhor', pergunta: "Precisa de uma explicação sobre buracos negros para leigos. Qual prompt é melhor?", opcoes: [ { texto: "Buracos negros." }, { texto: "Explica buracos negros." }, { texto: "Age como um astrónomo a falar para o público geral e explica o que são buracos negros de forma simples e interessante." }, { texto: "Ciência." } ], respostaCorreta: 2, explicacao: "Define a persona (astrónomo), o público (geral) e o tom (simples, interessante)." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Critica o meu poema [poema aqui].' A IA dá um feedback muito positivo e pouco útil. O que poderia melhorar o prompt?", prompt_na_pergunta: null, opcoes: [ { texto: "Pedir em formato de lista." }, { texto: "Atribuir uma Persona específica (ex: 'Age como um crítico literário rigoroso e aponta 3 pontos fortes e 3 pontos a melhorar no poema')." }, { texto: "Dar um exemplo de boa crítica." }, { texto: "Aumentar a temperatura da IA." } ], respostaCorreta: 1, explicacao: "Uma persona clara (crítico rigoroso) e instruções específicas sobre o que criticar (pontos fortes/fracos) geraria feedback mais útil." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'És um chatbot de apoio ao cliente. Responde à seguinte questão: [Questão]' O objetivo principal de 'És um chatbot...' é:", prompt_na_pergunta: null, opcoes: [ { texto: "Definir o contexto da questão." }, { texto: "Definir o formato da resposta." }, { texto: "Definir a Persona e o tom esperado (prestável, formal/informal)." }, { texto: "Dar um exemplo de resposta." } ], respostaCorreta: 2, explicacao: "Estabelece o papel da IA, influenciando diretamente o seu comportamento e estilo de comunicação." },
+                { tipo: 'escolha_melhor', pergunta: "Quer gerar uma história de encantar para crianças. Qual persona é mais adequada?", opcoes: [ { texto: "Age como um escritor famoso." }, { texto: "Age como um historiador." }, { texto: "Age como um contador de histórias infantil, com linguagem simples e tom mágico." }, { texto: "Sê criativo." } ], respostaCorreta: 2, explicacao: "A persona de 'contador de histórias infantil' alinha-se perfeitamente com o objetivo e o público-alvo." },
+                 { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Sê engraçado e fala sobre política.' A IA gera piadas ofensivas. O que faltou, além de talvez a IA ter limitações?", prompt_na_pergunta: null, opcoes: [ { texto: "Especificar o formato" }, { texto: "Dar exemplos de piadas aceitáveis" }, { texto: "Contexto sobre a política atual" }, { texto: "Instruções mais claras sobre o tipo de humor (ex: 'humor inteligente e não ofensivo') e talvez restrições (ex: 'evita ataques pessoais')." } ], respostaCorreta: 3, explicacao: "Apenas pedir para ser engraçado é vago. Definir melhor o tipo de humor e adicionar limites (constraints) ajuda a guiar a IA para um resultado seguro." },
+                { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Resolve o problema: [Problema matemático]. Mostra o teu raciocínio passo a passo.' A instrução final exemplifica qual técnica?", prompt_na_pergunta: null, opcoes: [ { texto: "Few-Shot Learning" }, { texto: "Contexto" }, { texto: "Persona" }, { texto: "Passo-a-Passo / Chain-of-Thought" } ], respostaCorreta: 3, explicacao: "Pedir explicitamente o 'raciocínio passo a passo' força a IA a detalhar o processo, melhorando a precisão em tarefas complexas." },
+                { tipo: 'escolha_melhor', pergunta: "Quer planear um projeto (definir tarefas, prazos, recursos). Qual abordagem de prompt é melhor?", opcoes: [ { texto: "Planeia o projeto X." }, { texto: "Tarefas do projeto X." }, { texto: "Vamos planear o projeto X. Primeiro, lista as 5 principais fases. Segundo, para cada fase, sugere 2-3 tarefas chave. Terceiro, estima um prazo para cada fase." }, { texto: "Gestão de projetos." } ], respostaCorreta: 2, explicacao: "Decompõe a tarefa complexa de planear em passos sequenciais e mais fáceis de gerir pela IA." },
+                { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Explica a teoria da relatividade e como construir uma máquina do tempo.' A IA foca-se muito na relatividade e pouco na máquina do tempo (que é ficção). Como melhorar?", prompt_na_pergunta: null, opcoes: [ { texto: "Pedir formato de tabela." }, { texto: "Dar um exemplo de máquina do tempo." }, { texto: "Dividir em passos: 'Passo 1: Explica a teoria da relatividade de forma simples. Passo 2: Com base nisso (e em ficção científica), descreve os componentes teóricos de uma máquina do tempo.'" }, { texto: "Atribuir persona de Einstein." } ], respostaCorreta: 2, explicacao: "Separar as duas partes da pergunta em passos claros garante que ambas são abordadas com o devido foco." },
+                 { tipo: 'identifica_tecnica', pergunta: "Pedir à IA 'Pensa em voz alta' ou 'Explica o teu raciocínio' antes de dar a resposta final relaciona-se com:", prompt_na_pergunta: null, opcoes: [ { texto: "Few-Shot Learning" }, { texto: "Chain-of-Thought (CoT)" }, { texto: "Persona" }, { texto: "Controlo de Formato" } ], respostaCorreta: 1, explicacao: "Estas instruções incentivam a IA a externalizar o seu processo de raciocínio, característico da técnica CoT." },
+                 { tipo: 'escolha_melhor', pergunta: "Objetivo: Escrever um artigo de blog sobre IA. Melhor abordagem:", opcoes: [ { texto: "Escreve artigo sobre IA." }, { texto: "Artigo de blog IA." }, { texto: "Escreve um artigo de blog (500 palavras). 1º Parágrafo: Introdução cativante. 2º e 3º: Explica 2 aplicações práticas. 4º: Conclusão com visão futura." }, { texto: "Conteúdo sobre IA." } ], respostaCorreta: 2, explicacao: "Estrutura o processo de escrita em passos lógicos (introdução, desenvolvimento, conclusão), guiando a IA." },
+                { tipo: 'identifica_tecnica', pergunta: "Após obter uma resposta inicial da IA, você ajusta ligeiramente o prompt (ex: adiciona uma palavra-chave, pede mais detalhes) e tenta novamente. Este processo chama-se:", prompt_na_pergunta: null, opcoes: [ { texto: "Few-Shot Learning" }, { texto: "Chain-of-Thought" }, { texto: "Engenharia de Prompt Iterativa" }, { texto: "Definição de Persona" } ], respostaCorreta: 2, explicacao: "A essência da engenharia de prompts é este ciclo de testar, analisar o output e refinar o input (prompt)." },
+                { tipo: 'escolha_melhor', pergunta: "O seu prompt deu uma resposta factual errada. O que NÃO deve fazer na próxima iteração?", opcoes: [ { texto: "Verificar a informação e fornecer o dado correto no contexto do novo prompt." }, { texto: "Simplificar a pergunta para ver se a IA entende o básico." }, { texto: "Assumir que a IA 'aprendeu' e fazer a mesma pergunta complexa outra vez." }, { texto: "Tentar uma formulação diferente da pergunta." } ], respostaCorreta: 2, explicacao: "As IAs podem errar. Repetir a mesma pergunta complexa sem corrigir ou simplificar provavelmente levará ao mesmo erro. É preciso iterar." },
+                { tipo: 'conceito', pergunta: "A engenharia de prompts é considerada mais uma 'arte' ou uma 'ciência exata'?", prompt_na_pergunta: null, opcoes: [ { texto: "Ciência Exata (há sempre uma fórmula perfeita)." }, { texto: "Arte e Ciência (envolve princípios, mas muita experimentação e intuição)." }, { texto: "Apenas Sorte." }, { texto: "Não é engenharia." } ], respostaCorreta: 1, explicacao: "Embora existam técnicas e boas práticas (ciência), otimizar prompts muitas vezes requer experimentação, criatividade e adaptação ao modelo específico (arte)." },
+                 { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Como um consultor financeiro para jovens adultos (Persona), cria uma lista (Formato) de 5 dicas simples (Clareza) para começar a poupar, baseando-te na ideia de 'pagar a ti mesmo primeiro' (Contexto).' Quantas técnicas são claramente combinadas aqui?", prompt_na_pergunta: null, opcoes: [ { texto: "Uma" }, { texto: "Duas" }, { texto: "Três" }, { texto: "Quatro ou Mais" } ], respostaCorreta: 3, explicacao: "Combina Persona, Formato, Clareza/Especificidade e Contexto." },
+                 { tipo: 'escolha_melhor', pergunta: "Qual prompt é melhor para gerar uma descrição de produto para e-commerce que seja otimizada para SEO?", opcoes: [ { texto: "Descrição do produto X." }, { texto: "Escreve uma descrição persuasiva para [Produto X], incluindo as palavras-chave [kw1, kw2, kw3] naturalmente no texto. O tom deve ser entusiasta. Formato: 2 parágrafos." }, { texto: "Fala bem do produto X." }, { texto: "SEO para produto X." } ], respostaCorreta: 1, explicacao: "Combina clareza (descrição persuasiva), contexto (produto X), formato (2 parág.), persona/tom (entusiasta) e requisito específico (palavras-chave SEO)." },
+                { tipo: 'conceito', pergunta: "Instruções como 'Não menciones preços' ou 'Evita linguagem política' são exemplos de:", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto Positivo" }, { texto: "Exemplos Negativos" }, { texto: "Restrições ou Constraints Negativas" }, { texto: "Definição de Formato" } ], respostaCorreta: 2, explicacao: "São 'constraints' que dizem à IA o que NÃO fazer, ajudando a controlar e a tornar a resposta mais segura ou focada." },
+                { tipo: 'escolha_melhor', pergunta: "Para obter consistentemente respostas curtas (tipo tweet), qual a melhor estratégia a longo prazo?", opcoes: [ { texto: "Pedir sempre 'resume isto'." }, { texto: "Usar um modelo de IA diferente." }, { texto: "Definir no prompt 'limita a resposta a 280 caracteres' ou 'escreve como um tweet'." }, { texto: "Dar um exemplo de tweet uma vez." } ], respostaCorreta: 2, explicacao: "Instruções claras sobre o formato/limite de tamanho em cada prompt são mais eficazes para consistência do que apenas um exemplo isolado." },
+                 { tipo: 'identifica_tecnica', pergunta: "Prompt: 'Explica o processo de mitose. Depois, compara-o com a meiose numa tabela.' Que técnicas estão a ser usadas?", prompt_na_pergunta: null, opcoes: [ { texto: "Apenas Clareza" }, { texto: "Persona e Contexto" }, { texto: "Passo-a-Passo e Formato" }, { texto: "Exemplos e Iteração" } ], respostaCorreta: 2, explicacao: "Divide a tarefa em dois passos ('Explica...', 'Depois, compara...') e especifica um formato ('numa tabela')." },
+                 { tipo: 'spot_the_flaw', pergunta: "Prompt: 'Lista 5 vantagens e 5 desvantagens da energia nuclear, de forma totalmente imparcial, mas expressa uma opinião final forte a favor.' Qual o problema principal?", prompt_na_pergunta: null, opcoes: [ { texto: "Pede demasiados itens (5+5)." }, { texto: "Instruções Contraditórias (imparcial vs. opinião forte a favor)." }, { texto: "Falta de Persona." }, { texto: "Falta de Contexto sobre energia nuclear." } ], respostaCorreta: 1, explicacao: "Pedir imparcialidade e ao mesmo tempo uma opinião enviesada cria uma contradição que confunde a IA." },
+                 { tipo: 'conceito', pergunta: "A 'Temperatura' num modelo de IA geralmente controla:", prompt_na_pergunta: null, opcoes: [ { texto: "A velocidade da resposta." }, { texto: "O conhecimento factual do modelo." }, { texto: "A criatividade/aleatoriedade vs. previsibilidade/foco da resposta." }, { texto: "O formato da resposta." } ], respostaCorreta: 2, explicacao: "Temperaturas mais altas levam a respostas mais criativas/diversas, enquanto temperaturas baixas geram respostas mais focadas e previsíveis." },
+                 { tipo: 'escolha_melhor', pergunta: "Precisa de reescrever um parágrafo num tom mais simples. Qual prompt é mais direto?", opcoes: [ { texto: "Simplifica [parágrafo]." }, { texto: "Reescreve o seguinte parágrafo para que uma criança de 10 anos o entenda: [parágrafo]" }, { texto: "Torna este texto fácil: [parágrafo]" }, { texto: "Edita [parágrafo]." } ], respostaCorreta: 1, explicacao: "É específico quanto à ação (reescrever), ao público-alvo (criança de 10 anos) e fornece o contexto (o parágrafo)." }
+            ];
+
+            let perguntaAtualIndex = 0;
+            let pontuacao = 0;
+            let respostaSelecionada = false; 
+
+            // Funções do Quiz (copiadas da versão anterior)
+            function carregarPergunta() { 
+                respostaSelecionada = false; 
+                feedbackDiv.textContent = ''; 
+                feedbackDiv.className = 'feedback'; 
+                botaoProximo.textContent = "Verificar";
+                botaoProximo.disabled = true; 
+
+                if (perguntaAtualIndex < perguntasQuiz.length) {
+                    const perguntaAtual = perguntasQuiz[perguntaAtualIndex];
+                    
+                    let questaoHTML = `<p>${perguntaAtualIndex + 1}. ${perguntaAtual.pergunta}</p>`;
+                    if (perguntaAtual.prompt_na_pergunta) {
+                        questaoHTML += `<pre>${perguntaAtual.prompt_na_pergunta}</pre>`;
+                    }
+                    questaoDiv.innerHTML = questaoHTML;
+                    
+                    opcoesDiv.innerHTML = ''; 
+
+                    perguntaAtual.opcoes.forEach((opcao, index) => {
+                        const botao = document.createElement('button');
+                        let botaoHTML = opcao.texto;
+                        if (opcao.prompt_exemplo) { 
+                            botaoHTML += `<pre>${opcao.prompt_exemplo}</pre>`;
+                        }
+                        botao.innerHTML = botaoHTML; 
+
+                        botao.onclick = () => {
+                            if (respostaSelecionada) return; 
+                            const todosBotoesOpcao = opcoesDiv.querySelectorAll('button');
+                            todosBotoesOpcao.forEach(b => b.style.fontWeight = 'normal'); 
+                            botao.style.fontWeight = 'bold'; 
+                            botaoProximo.disabled = false; 
+                            botaoProximo.dataset.opcaoEscolhidaIndex = index; 
+                        };
+                        opcoesDiv.appendChild(botao);
+                    });
+
+                    botaoProximo.onclick = verificarResposta; 
+
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function verificarResposta() { 
+                 if (botaoProximo.disabled) return; 
+                 if (respostaSelecionada) return; 
+                 respostaSelecionada = true;
+
+                 const perguntaAtual = perguntasQuiz[perguntaAtualIndex];
+                 const indiceEscolhido = parseInt(botaoProximo.dataset.opcaoEscolhidaIndex);
+                 const indiceCorreto = perguntaAtual.respostaCorreta;
+                 
+                 const todosBotoesOpcao = opcoesDiv.querySelectorAll('button');
+                 const botaoClicado = todosBotoesOpcao[indiceEscolhido];
+
+                 todosBotoesOpcao.forEach(b => b.disabled = true);
+
+                 if (indiceEscolhido === indiceCorreto) {
+                     pontuacao++;
+                     botaoClicado.classList.add('correta');
+                     feedbackDiv.textContent = "Correto! 👍";
+                     feedbackDiv.className = 'feedback feedback-correto'; 
+                 } else {
+                     botaoClicado.classList.add('errada');
+                     feedbackDiv.textContent = `Errado. ${perguntaAtual.explicacao || 'Tente pensar qual técnica se aplicaria melhor.'}`; 
+                     feedbackDiv.className = 'feedback feedback-errado'; 
+                     if (todosBotoesOpcao[indiceCorreto]) {
+                          todosBotoesOpcao[indiceCorreto].classList.add('correta');
+                          todosBotoesOpcao[indiceCorreto].style.fontWeight = 'bold';
+                     }
+                 }
+                 
+                 botaoProximo.textContent = "Próxima Pergunta";
+                 botaoProximo.onclick = proximaPergunta; 
+            }
+
+            function proximaPergunta() { 
+                 perguntaAtualIndex++;
+                 carregarPergunta();
+            }
+            
+            function mostrarResultado() { 
+                quizContainer.innerHTML = ''; 
+                resultadoFinalDiv.innerHTML = `
+                    <h2>Quiz Terminado!</h2>
+                    <p>A tua pontuação final foi: ${pontuacao} de ${perguntasQuiz.length} perguntas.</p>
+                    <button onclick="window.location.reload()">Tentar Novamente</button>
+                `;
+                quizContainer.appendChild(resultadoFinalDiv); 
+            }
+
+            // Iniciar o Quiz
+            carregarPergunta();
+
+        }); // Fim do DOMContentLoaded
+    </script>
+
+</body>
+</html>
