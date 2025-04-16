@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engenharia de Prompts para Imagens - Ferramenta Final PT</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Engenharia de Prompts para Imagens - Ferramenta Final PT v7</title> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         /* --- Estilos Gerais (Mantidos e Refinados) --- */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; line-height: 1.6; margin: 0; padding: 20px; background-color: #f8f9fa; color: #212529; padding-bottom: 60px; }
-        #container { max-width: 850px; /* Ligeiramente mais largo */ margin: 20px auto; padding: 25px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #dee2e6; padding-bottom: 40px; }
+        #container { max-width: 850px; margin: 20px auto; padding: 25px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #dee2e6; padding-bottom: 40px; }
         h1, h2 { color: #0056b3; text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e9ecef; font-weight: 600; }
         h1 { font-size: 2.2em; }
         h2 { font-size: 1.6em; }
         hr { border: 0; height: 1px; background: #dee2e6; margin: 35px 0; }
         p { margin-bottom: 1.1em; color: #495057; }
-        #imagem-ilustrativa { display: block; max-width: 70%; /* Ligeiramente maior */ height: auto; margin: 15px auto 35px auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        #imagem-ilustrativa { display: block; max-width: 70%; height: auto; margin: 15px auto 35px auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
         /* --- Estilos específicos para CODE e PRE --- */
         code, pre code { font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background-color: #e9ecef; padding: 3px 6px; border-radius: 4px; font-size: 0.9em; color: #343a40; }
@@ -25,9 +23,8 @@
         .exemplo-fraco pre { border-left: 5px solid #dc3545; background: #fef4f4; }
         .exemplo-forte pre { border-left: 5px solid #28a745; background: #f4fef7; }
         #exemploReferenciaPlayground pre { background: #f4fef7; border-left: 5px solid #28a745; }
-        #infoTecnica strong { color: #0056b3; font-weight: 600; } /* Palavras chave na descrição */
-        #infoTecnica p strong { color: #d9534f; font-weight: 600;} /* Dica importante na iteração */
-
+        #infoTecnica strong { color: #0056b3; font-weight: 600; }
+        #infoTecnica p strong { color: #d9534f; font-weight: 600;}
 
         /* --- Secção Explorador --- */
         #explorer { margin-bottom: 30px; }
@@ -104,7 +101,7 @@
         <section id="explorer">
             <h2><i class="fas fa-search"></i> Explora as Técnicas de Prompt</h2>
             <p>Clica numa técnica para aprender como aplicá-la na geração de imagens e pratica a construção do teu prompt:</p>
-             <div id="botoesTecnicas">
+            <div id="botoesTecnicas">
                 <button class="botao-tecnica" data-tecnica="clareza">Instruções Claras</button>
                 <button class="botao-tecnica" data-tecnica="contexto">Contexto</button>
                 <button class="botao-tecnica" data-tecnica="formato">Formato</button>
@@ -124,7 +121,7 @@
             <h2><i class="fas fa-pencil-alt"></i> Playground de Prompts Visuais</h2>
             <div id="instrucaoPlayground"><p>Selecione uma técnica acima para obter dicas e praticar a sua escrita!</p></div>
             <div id="promptBuilderArea" style="margin-bottom: 20px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6;">
-                 <p class="builder-default-msg">Selecione uma técnica com ajudas (Instruções Claras, Contexto, Formato, Persona, Composição) para ver os seletores.</p>
+                 <p class="builder-default-msg">Selecione uma técnica com ajudas (Instruções Claras, Contexto, Formato, Persona, Exemplos) para ver os seletores.</p>
             </div>
             <div id="areaPratica">
                 <textarea id="promptUsuario" rows="10" placeholder="Construa o seu prompt visual com as ajudas acima (se disponíveis) ou escreva livremente aqui... Use vírgulas para separar os conceitos chave."></textarea>
@@ -161,6 +158,7 @@
             const infoTecnicaDiv = document.getElementById('infoTecnica');
             const instrucaoPlaygroundDiv = document.getElementById('instrucaoPlayground');
             const promptUsuarioTextarea = document.getElementById('promptUsuario');
+            // *** Corrigido: Busca pelos botões Copiar/Limpar ANTES de adicionar listeners ***
             const botaoCopiarPrompt = document.getElementById('botaoCopiarPrompt');
             const botaoLimparPrompt = document.getElementById('botaoLimparPrompt');
             const feedbackCopiaSpan = document.getElementById('feedbackCopia');
@@ -176,200 +174,166 @@
             // --- Função auxiliar para escapar HTML ---
             function escapeHTML(str) {
                 if (!str) return "";
-                // Usar textContent para evitar XSS
-                const temp = document.createElement('div');
-                temp.textContent = str;
-                return temp.innerHTML;
+                const p = document.createElement('p');
+                p.textContent = str;
+                return p.innerHTML;
             }
 
-            // --- DADOS DAS TÉCNICAS (Chaves Originais, Conteúdo adaptado para Imagens PT-PT) ---
+             // --- DADOS DAS TÉCNICAS (Chaves Originais, Conteúdo adaptado para Imagens PT-PT) ---
+            // ****** COLAR AQUI O CONTEÚDO COMPLETO DE dadosTecnicas DA RESPOSTA ANTERIOR ******
             const dadosTecnicas = {
-                clareza: { // Chave original
+                clareza: {
                     nome: "Instruções Claras e Específicas",
-                    descricao: "Para imagens, ser claro significa descrever o <strong>assunto principal</strong> sem ambiguidades e adicionar <strong>detalhes visuais</strong> importantes (cores, formas, texturas, quantidades). Evite termos vagos como 'bonito' ou 'interessante'. Quanto mais específica for a descrição visual, melhor a IA 'vê' o que pretende.",
+                    descricao: "Para imagens, ser claro significa descrever o <strong>assunto principal</strong> sem ambiguidades e adicionar <strong>detalhes visuais</strong> importantes (cores, formas, texturas, quantidades). Evite termos vagos como 'bonito'. Quanto mais específica for a descrição visual, melhor a IA 'vê' o que pretende.",
                     exemplo_mau: "Um carro fixe.",
                     exemplo_bom: "Um carro desportivo vermelho clássico dos anos 60, conversível, com pneus de faixa branca, estacionado numa rua de paralelo molhada pela chuva, reflexos das luzes da cidade na pintura.",
-                    builderComponents: [ // Associado a Clareza -> Assunto/Detalhe
+                    builderComponents: [
                         { id: "sujeito", label: "Assunto Principal:", options: ["", "gato", "cão", "pessoa", "carro desportivo", "árvore", "montanha", "edifício moderno", "objeto abstrato"] },
                         { id: "detalhe1", label: "Detalhe Visual 1:", options: ["", "vermelho", "azul", "metálico", "enferrujado", "peludo", "sorridente", "antigo", "futurista", "solitário", "gigante"] },
                         { id: "detalhe2", label: "Detalhe Visual 2:", options: ["", "com reflexos", "coberto de neve", "em chamas", "flutuante", "transparente", "minimalista", "ornamentado", "com olhos brilhantes", "com padrão às riscas"] },
                         { id: "quantidade", label: "Quantidade (se aplicável):", options: ["", "um único", "um par de", "três", "um grupo de", "uma multidão de", "vários"] }
                     ]
                 },
-                contexto: { // Chave original
+                contexto: {
                     nome: "Fornecer Contexto",
-                    descricao: "Onde e quando se passa a cena? Descreva o <strong>ambiente/cenário</strong> (interior/exterior, cidade/campo, dia/noite), a <strong>iluminação</strong> geral (solarengo, nublado, lusco-fusco) e a <strong>atmosfera</strong> (alegre, sombria, mágica). O contexto situa o assunto e define o 'mood'.",
+                    descricao: "Onde e quando se passa a cena? Descreva o <strong>ambiente/cenário</strong> (interior/exterior, cidade/campo, dia/noite), a <strong>iluminação</strong> geral (solarengo, nublado, lusco-fusco) e a <strong>atmosfera</strong> (alegre, sombria, mágica). O contexto situa o assunto e define o 'mood' (ambiente/sensação) da imagem.",
                     exemplo_mau: "Um astronauta.",
                     exemplo_bom: "Um astronauta a flutuar calmamente no espaço profundo, a Terra azul e branca parcialmente visível abaixo, estrelas distantes a brilhar intensamente, sensação de solidão e admiração.",
-                     builderComponents: [ // Associado a Contexto -> Cenário/Atmosfera
+                     builderComponents: [
                         { id: "local", label: "Localização:", options: ["", "floresta encantada", "cidade cyberpunk", "praia tropical", "pico de montanha nevado", "deserto árido", "espaço sideral", "interior de biblioteca antiga", "laboratório científico"] },
                         { id: "hora_luz", label: "Hora/Iluminação:", options: ["", "amanhecer suave", "meio-dia solarengo", "pôr do sol dourado", "noite estrelada", "luz de néon vibrante", "iluminação dramática de tempestade", "luz suave e difusa"] },
                         { id: "atmosfera", label: "Atmosfera/Sensação:", options: ["", "pacífica e serena", "épica e grandiosa", "misteriosa e inquietante", "alegre e festiva", "melancólica e nostálgica", "caótica e energética", "sonhadora e surreal"] }
                     ]
                 },
-                 formato: { // Chave original
+                 formato: {
                     nome: "Especificar o Formato",
-                    descricao: "Como deve ser o 'output' visual? Refere-se principalmente ao <strong>estilo artístico</strong> (<code>fotografia</code>, <code>pintura a óleo</code>, <code>cartoon</code>, <code>3D render</code>), mas também pode incluir <strong>especificações técnicas</strong> como a <strong>relação de aspeto</strong> (<code>--ar 16:9</code>) ou nível de <strong>detalhe</strong> (<code>altamente detalhado</code>, <code>esboço rápido</code>).",
+                    descricao: "Como deve ser o 'output' visual? Refere-se principalmente ao <strong>estilo artístico</strong> (<code>fotografia</code>, <code>pintura a óleo</code>, <code>cartoon</code>, <code>render 3D</code>), mas também pode incluir <strong>especificações técnicas</strong> como a <strong>relação de aspeto</strong> (<code>--ar 16:9</code>) ou nível de <strong>detalhe</strong> (<code>altamente detalhado</code>, <code>esboço rápido</code>).",
                     exemplo_mau: "Gato a dormir.",
                     exemplo_bom: "Gato a dormir numa almofada, fotografia macro, baixa profundidade de campo, altamente detalhado, --ar 1:1.",
-                    builderComponents: [ // Associado a Formato -> Estilo/Qualidade/Aspect Ratio
+                    builderComponents: [
                         { id: "meio", label: "Estilo/Meio Artístico:", options: ["", "Fotografia", "Pintura a óleo", "Aguarela", "Esboço a lápis", "Desenho a tinta", "Cartoon", "Estilo Anime", "Render 3D", "Pixel Art", "Arte Vetorial", "Escultura"] },
                         { id: "qualidade", label: "Nível de Detalhe/Qualidade:", options: ["", "Altamente detalhado", "Cinematográfico", "Realista", "Hiper-realista", "Estilizado", "Esboço rápido", "Cores vibrantes", "Monocromático", "Foco suave ('soft focus')"] },
                         { id: "aspect", label: "Relação de Aspeto (exemplo):", options: ["", "--ar 16:9 (Paisagem)", "--ar 9:16 (Retrato)", "--ar 1:1 (Quadrado)", "--ar 4:3", "--ar 3:2"] }
                     ]
                 },
-                exemplos: { // Chave original (Few-Shot)
+                exemplos: {
                     nome: "Dar Exemplos (Referências)",
                     descricao: "Embora 'few-shot' (dar vários exemplos input->output) seja mais para texto, o princípio aplica-se a imagens através de <strong>referências</strong>. Mencionar <strong>artistas</strong> (<code>estilo Van Gogh</code>), <strong>movimentos</strong> (<code>Art Nouveau</code>), <strong>obras</strong> (<code>ambiente Blade Runner</code>) ou <strong>estéticas</strong> (<code>estética Ghibli</code>) funciona como um 'exemplo' visual para a IA seguir.",
                     exemplo_mau: "Uma rapariga num campo.",
                     exemplo_bom: "Uma rapariga num campo de flores silvestres, no estilo de pintura impressionista de Monet.",
-                    // Builder associado à técnica 'Persona' ou 'Referências' (ver Persona)
+                     builderComponents: [ // Reutiliza os componentes de Persona/Referências
+                        { id: "artista", label: "Referência Artística (Artista):", options: ["", "Van Gogh", "Monet", "Dali", "Picasso", "H.R. Giger", "Hayao Miyazaki", "Greg Rutkowski", "Frida Kahlo", "Tim Burton"] },
+                        { id: "movimento", label: "Referência Artística (Mov./Estética):", options: ["", "Impressionismo", "Surrealismo", "Art Nouveau", "Cyberpunk", "Steampunk", "Gótico", "Minimalismo", "Bauhaus", "Pop Art", "Estética Ghibli"] },
+                        { id: "obra", label: "Referência Artística (Obra/Media):", options: ["", "Blade Runner", "O Senhor dos Anéis", "Star Wars", "Bioshock", "Filme de Wes Anderson", "Akira", "Alice no País das Maravilhas"] }
+                    ]
                 },
-                persona: { // Chave original
+                persona: {
                      nome: "Atribuir uma Persona / Papel",
                      descricao: "Embora menos direto que no texto, pode influenciar o estilo pedindo à IA para 'desenhar como' um tipo específico de artista ou referenciando um estilo muito característico. É semelhante a usar referências (ver técnica anterior).",
                      exemplo_mau: "Cidade futurista.",
                      exemplo_bom: "Desenha uma cidade futurista como se fosses Syd Mead (artista conceptual de Blade Runner).",
-                     builderComponents: [ // Associado a Persona/Referências
+                     builderComponents: [ // Usa os mesmos componentes de Referências
                         { id: "artista", label: "Referência Artística (Artista):", options: ["", "Van Gogh", "Monet", "Dali", "Picasso", "H.R. Giger", "Hayao Miyazaki", "Greg Rutkowski", "Frida Kahlo", "Tim Burton"] },
                         { id: "movimento", label: "Referência Artística (Mov./Estética):", options: ["", "Impressionismo", "Surrealismo", "Art Nouveau", "Cyberpunk", "Steampunk", "Gótico", "Minimalismo", "Bauhaus", "Pop Art", "Estética Ghibli"] },
                         { id: "obra", label: "Referência Artística (Obra/Media):", options: ["", "Blade Runner", "O Senhor dos Anéis", "Star Wars", "Bioshock", "Filme de Wes Anderson", "Akira", "Alice no País das Maravilhas"] }
                     ]
                  },
-                passos: { // Chave original (Chain-of-Thought)
+                passos: {
                     nome: "Passo-a-Passo (Iteração)",
                     descricao: "Para imagens complexas, pode ser útil <strong>construir o prompt iterativamente</strong>. Comece com o essencial (assunto, estilo) e depois refine adicionando camadas de detalhe (cenário, iluminação, composição) em prompts sucessivos, analisando os resultados intermédios. É mais um processo do que uma estrutura única de prompt.",
                     exemplo_mau: "Tentar descrever uma cena hiper-complexa toda de uma vez.",
                     exemplo_bom: "1º Prompt: `gato guerreiro, armadura simples`. 2º Prompt (após ver resultado): `gato guerreiro com armadura samurai detalhada, a segurar uma katana, numa floresta de bambu ao luar`. 3º Prompt: `..., ângulo baixo, luz dramática vinda da lua`."
                 },
-                stepback: { // Chave original
+                stepback: {
                     nome: "Step-back Prompting (Conceptualização)",
                     descricao: "Para imagens, 'dar um passo atrás' pode significar pensar primeiro nos <strong>conceitos gerais</strong> ou na <strong>emoção</strong> que quer transmitir, antes de detalhar a cena. Ex: Em vez de pedir logo 'mulher triste à chuva', pode pensar 'Quero transmitir melancolia e solidão. Como? Talvez uma figura solitária num ambiente cinzento e chuvoso.'",
                     exemplo_mau: "Prompt direto e complexo que falha em capturar a emoção.",
                     exemplo_bom: "Pensamento: Conceito = Paz na Natureza. Elementos = pessoa, lago, montanhas, manhã. Prompt: `Uma pessoa sentada sozinha na margem calma de um lago cristalino ao amanhecer, montanhas majestosas refletidas na água, névoa suave a pairar, sensação de paz profunda, estilo pintura realista.`"
                 },
-                instrucoes_vs_restricoes: { // Chave original
+                instrucoes_vs_restricoes: {
                     nome: "Instruções vs. Restrições (Prompts Negativos)",
                     descricao: "Tal como no texto, é geralmente melhor focar no que <strong>quer ver</strong> (instruções positivas: <code>cores vibrantes</code>, <code>expressão feliz</code>). No entanto, em imagens, as 'restrições' são muito úteis na forma de <strong>prompts negativos</strong> para excluir o que <strong>não quer ver</strong> (<code>--no texto</code>, <code>--no mãos deformadas</code>, <code>--no desfocado</code>). Use ambos!",
                     exemplo_mau: "Um retrato (sem negativos, pode ter artefactos).",
                     exemplo_bom: "Um retrato detalhado de uma mulher idosa com olhos gentis, fundo desfocado, --no óculos, joias, maquilhagem excessiva."
                 },
-                iteracao: { // Chave original
+                iteracao: {
                     nome: "Iteração (e Documentação)",
-                    descricao: "Fundamental em imagens! Analise cada resultado. O que funcionou? O que falhou? <strong>Refine</strong> o prompt: adicione/remova/altere palavras-chave, ajuste pesos (se a ferramenta permitir), experimente estilos diferentes. <strong>Documentar</strong> (mesmo que num ficheiro de texto) os prompts que deram bons resultados e porquê, é crucial para aprender e reutilizar.",
-                     // Descrição da dica importante em PT-PT
+                    descricao: "Fundamental em imagens! Analise cada resultado. O que funcionou? O que falhou? <strong>Refine</strong> o prompt: adicione/remova/altere palavras-chave, ajuste pesos (se a ferramenta permitir), experimente estilos diferentes. <strong>Documentar</strong> (mesmo que num ficheiro de texto) os prompts que deram bons resultados e porquê, é crucial para aprender e reutilizar. <p><strong>Dica Importante:</strong> A prática leva à perfeição! Não tenha medo de experimentar.</p>",
                     exemplo_mau: "Gerar uma vez, não gostar, desistir.",
                     exemplo_bom: "Gerar -> Analisar -> Ajustar prompt (ex: `+detalhe X`, `-palavra Y`, `mudar estilo para Z`) -> Gerar novamente -> Repetir até estar satisfeito."
                  }
             };
 
             // --- Função para atualizar a Textarea com base nos Dropdowns ---
-             function atualizarPromptComBuilder() {
+            function atualizarPromptComBuilder() {
+                 // ... (código mantido igual à versão anterior) ...
                  const selects = document.querySelectorAll('#promptBuilderArea select');
-                 if (selects.length === 0) {
-                    // Limpa a text area se não houver builder para a técnica atual?
-                    // promptUsuarioTextarea.value = ""; // Descomentar se quiser limpar
-                    return;
-                 }
-
+                 if (selects.length === 0) { return; }
                  let promptParts = [];
                  let selections = {};
-
                  selects.forEach(select => {
                     if (select.value) {
                         const key = select.id.replace('select-', '');
                         const value = select.value;
                         selections[key] = value;
-
-                        // Lógica de adicionar ao prompt (ajustada para as novas associações)
-                        const tecnicaAtiva = document.querySelector('.botao-tecnica.ativo')?.getAttribute('data-tecnica');
-
-                        if (key === 'aspect') return; // Adiciona no fim
-
-                        // Associar dropdowns às técnicas originais
-                        if ((tecnicaAtiva === 'clareza' && ['detalhe1','detalhe2','quantidade'].includes(key)) ||
-                            (tecnicaAtiva === 'contexto' && ['local','ambiente','hora_luz','atmosfera'].includes(key)) ||
-                            (tecnicaAtiva === 'formato' && ['meio','qualidade'].includes(key)) ||
-                            (tecnicaAtiva === 'composicao' && ['angulo','plano','luz'].includes(key)) )
-                        {
-                            const match = value.match(/\((.*?)\)/); // Tenta extrair termo EN
-                            promptParts.push(match ? match[1] : value);
+                        if (key === 'aspect') return;
+                        if (key === 'artista') promptParts.push(`no estilo de ${value}`);
+                        else if (key === 'movimento') promptParts.push(`estética ${value}`);
+                        else if (key === 'obra') promptParts.push(`ambiente tipo ${value}`);
+                        else if (key === 'angulo' || key === 'plano' || key === 'luz') {
+                             const match = value.match(/\((.*?)\)/);
+                             promptParts.push(match ? match[1] : value);
                         }
-                        else if (tecnicaAtiva === 'persona' || tecnicaAtiva === 'exemplos') { // Agrupar Refs em Persona/Exemplos
-                           if (key === 'artista') promptParts.push(`no estilo de ${value}`);
-                           else if (key === 'movimento') promptParts.push(`estética ${value}`);
-                           else if (key === 'obra') promptParts.push(`ambiente tipo ${value}`);
-                        }
-                        // Adicionar sujeito/ação apenas se a técnica for 'clareza'
-                        else if (tecnicaAtiva === 'clareza' && (key === 'sujeito' || key === 'acao')) {
-                           // Tratado abaixo na construção inicial
+                        else if (key !== 'sujeito' && key !== 'adjetivo1' && key !== 'adjetivo2' && key !== 'acao') {
+                            promptParts.push(value);
                         }
                     }
                  });
-
-                  const tecnicaAtiva = document.querySelector('.botao-tecnica.ativo')?.getAttribute('data-tecnica');
-                  let promptInicial = "";
-                  // Construir a frase inicial apenas para 'clareza'
-                  if (tecnicaAtiva === 'clareza' && selections.sujeito) {
-                     promptInicial = `${selections.adjetivo1 || ''} ${selections.adjetivo2 || ''} ${selections.sujeito} ${selections.acao || ''}`.replace(/\s+/g, ' ').trim();
-                     // Remover partes já usadas (pode ser impreciso se houver valores iguais)
-                     // Uma abordagem mais segura seria reconstruir promptParts do zero aqui
-                     let tempParts = promptParts.filter(part => ![selections.adjetivo1, selections.adjetivo2, selections.sujeito, selections.acao].includes(part));
-                     if (promptInicial) {
-                        promptParts = [promptInicial, ...tempParts];
-                     } else {
-                         promptParts = tempParts;
-                     }
-                  }
-
-
-                 let promptConstruido = promptParts.filter(part => part).join(', ');
-
-                  if (selections.aspect) {
-                      promptConstruido += (promptConstruido ? ', ' : '') + selections.aspect;
-                  }
-
-                  promptUsuarioTextarea.value = promptConstruido;
+                 const tecnicaAtiva = document.querySelector('.botao-tecnica.ativo')?.getAttribute('data-tecnica');
+                 let promptInicial = "";
+                 if (tecnicaAtiva === 'clareza' && selections.sujeito) {
+                    promptInicial = `${selections.adjetivo1 || ''} ${selections.adjetivo2 || ''} ${selections.sujeito} ${selections.acao || ''}`.replace(/\s+/g, ' ').trim();
+                    let tempParts = promptParts.filter(part => ![selections.adjetivo1, selections.adjetivo2, selections.sujeito, selections.acao].includes(part) && part !== promptInicial);
+                    if (promptInicial) { promptParts = [promptInicial, ...tempParts]; }
+                    else { promptParts = tempParts; }
+                 }
+                let promptConstruido = promptParts.filter(part => part).join(', ');
+                 if (selections.aspect) { promptConstruido += (promptConstruido ? ', ' : '') + selections.aspect; }
+                 promptUsuarioTextarea.value = promptConstruido;
             }
 
 
             // --- LÓGICA DO EXPLORADOR E PLAYGROUND ---
             function mostrarInfoTecnica(tecnicaId) {
-                const dados = dadosTecnicas[tecnicaId]; // Usa a chave original (ex: 'clareza')
-                if (!dados) {
-                    console.error("Dados não encontrados para a técnica:", tecnicaId);
-                    return; // Sai se não encontrar dados para evitar erros
-                }
-                infoTecnicaDiv.classList.remove('visivel');
-
+                 const dados = dadosTecnicas[tecnicaId];
+                 if (!dados) {
+                     console.error("Dados não encontrados para a técnica:", tecnicaId);
+                     infoTecnicaDiv.innerHTML = '<p>Erro: Técnica não encontrada.</p>';
+                     instrucaoPlaygroundDiv.innerHTML = '<p>Erro ao carregar instruções.</p>';
+                     exemploReferenciaPlaygroundDiv.innerHTML = '';
+                     promptBuilderArea.innerHTML = '<p class="builder-default-msg">Erro ao carregar ajudas.</p>';
+                     infoTecnicaDiv.classList.add('visivel');
+                     return;
+                 }
+                 infoTecnicaDiv.classList.remove('visivel');
                 setTimeout(() => {
-                    // Atualiza Info Técnica
                     const escapedExMau = escapeHTML(dados.exemplo_mau);
                     const escapedExBom = escapeHTML(dados.exemplo_bom);
                     const exMauHtml = dados.exemplo_mau ? `<div class="exemplo-fraco"><strong>Exemplo Fraco:</strong><pre><code>${escapedExMau}</code></pre></div>` : '';
                     const exBomHtml = dados.exemplo_bom ? `<div class="exemplo-forte"><strong>Exemplo Forte:</strong><pre><code>${escapedExBom}</code></pre></div>` : '';
                     const exBomRefHtml = dados.exemplo_bom ? `<strong>Exemplo Forte (Referência):</strong><pre><code>${escapedExBom}</code></pre>` : '';
-
-                    // A descrição pode ter HTML (<strong>, <code>), não escapar aqui.
                     infoTecnicaDiv.innerHTML = `<h3><i class="fas fa-info-circle"></i> ${dados.nome}</h3><p>${dados.descricao}</p>${exMauHtml}${exBomHtml}`;
                     exemploReferenciaPlaygroundDiv.innerHTML = exBomRefHtml;
-
                     let instrucaoTexto = `Pratique a técnica: <strong>${dados.nome}</strong>. Use os seletores abaixo (se disponíveis) ou escreva livremente na caixa de texto.`;
                     instrucaoPlaygroundDiv.innerHTML = `<p>${instrucaoTexto}</p>`;
-
                     infoTecnicaDiv.classList.add('visivel');
                     botoesTecnica.forEach(btn => btn.classList.toggle('ativo', btn.getAttribute('data-tecnica') === tecnicaId));
 
                     // --- Atualização do PROMPT BUILDER ---
-                    promptBuilderArea.innerHTML = ''; // Limpa sempre
-
-                    // Mapear técnicas originais para componentes do builder
+                    promptBuilderArea.innerHTML = '';
                     let componentsParaMostrar = null;
-                    if (tecnicaId === 'clareza') componentsParaMostrar = dadosTecnicas.clareza.builderComponents;
-                    else if (tecnicaId === 'contexto') componentsParaMostrar = dadosTecnicas.contexto.builderComponents;
-                    else if (tecnicaId === 'formato') componentsParaMostrar = dadosTecnicas.formato.builderComponents;
-                     else if (tecnicaId === 'persona' || tecnicaId === 'exemplos') componentsParaMostrar = dadosTecnicas.persona.builderComponents; // Reutilizar refs para exemplos também
-                     else if (tecnicaId === 'composicao') componentsParaMostrar = dadosTecnicas.composicao.builderComponents; // Associar técnica inventada a componentes
+                    // Mapeamento CORRETO das técnicas originais para os componentes definidos nos dados
+                    if (dados.builderComponents) { componentsParaMostrar = dados.builderComponents; }
 
                     if (componentsParaMostrar) {
                         componentsParaMostrar.forEach(component => {
@@ -389,85 +353,128 @@
                             promptBuilderArea.appendChild(label);
                             promptBuilderArea.appendChild(select);
                         });
-                         atualizarPromptComBuilder(); // Atualiza textarea com base nos defaults
+                         atualizarPromptComBuilder();
                     } else {
                         promptBuilderArea.innerHTML = '<p class="builder-default-msg">Esta técnica não possui ajudas de construção. Use a caixa de texto abaixo.</p>';
                         promptUsuarioTextarea.focus();
                     }
-                    // --- Fim Atualização Builder ---
-
                 }, 50);
             }
 
-            // Attach event listeners - VERIFICAR SE ESTÁ CORRETO
+            // Attach event listeners (Corrigido e verificado)
             botoesTecnica.forEach(botao => {
                  botao.addEventListener('click', () => {
-                    // Passa o data-attribute correto ('clareza', 'contexto', etc.)
                     mostrarInfoTecnica(botao.getAttribute('data-tecnica'));
                  });
             });
 
 
-             // --- Lógica do Playground (Copiar/Limpar) ---
-             botaoCopiarPrompt.addEventListener('click', () => {
-                 // ... (código mantido igual à versão anterior) ...
-            });
+             // --- Lógica do Playground (Copiar/Limpar) - VERSÃO MELHORADA ---
+             if (botaoCopiarPrompt && promptUsuarioTextarea && feedbackCopiaSpan) {
+                 botaoCopiarPrompt.addEventListener('click', () => {
+                     const textoParaCopiar = promptUsuarioTextarea.value;
+                     if (!textoParaCopiar) { console.log("Nada para copiar."); return; }
+                     if (navigator.clipboard && window.isSecureContext) {
+                         navigator.clipboard.writeText(textoParaCopiar).then(() => {
+                             feedbackCopiaSpan.textContent = "Prompt copiado!";
+                             feedbackCopiaSpan.style.color = "#28a745";
+                             feedbackCopiaSpan.classList.remove('feedback-copia-oculto');
+                             feedbackCopiaSpan.classList.add('feedback-copia-visivel');
+                             botaoCopiarPrompt.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                             botaoCopiarPrompt.disabled = true;
+                             setTimeout(() => {
+                                 feedbackCopiaSpan.classList.remove('feedback-copia-visivel');
+                                 feedbackCopiaSpan.classList.add('feedback-copia-oculto');
+                                 botaoCopiarPrompt.innerHTML = '<i class="fas fa-copy"></i> Copiar Prompt';
+                                 botaoCopiarPrompt.disabled = false;
+                             }, 2000);
+                         }).catch(err => {
+                             console.error('Erro ao copiar com navigator.clipboard: ', err);
+                             feedbackCopiaSpan.textContent = "Erro ao copiar.";
+                             feedbackCopiaSpan.style.color = "#dc3545";
+                             feedbackCopiaSpan.classList.remove('feedback-copia-oculto');
+                             feedbackCopiaSpan.classList.add('feedback-copia-visivel');
+                             setTimeout(() => {
+                                 feedbackCopiaSpan.classList.remove('feedback-copia-visivel');
+                                 feedbackCopiaSpan.classList.add('feedback-copia-oculto');
+                                 feedbackCopiaSpan.style.color = "#28a745";
+                             }, 3000);
+                         });
+                     } else {
+                         console.warn("navigator.clipboard não disponível ou contexto não seguro.");
+                         feedbackCopiaSpan.textContent = "Cópia automática falhou (contexto inseguro?). Tente copiar manualmente.";
+                         feedbackCopiaSpan.style.color = "#ffc107";
+                         feedbackCopiaSpan.classList.remove('feedback-copia-oculto');
+                         feedbackCopiaSpan.classList.add('feedback-copia-visivel');
+                           setTimeout(() => {
+                             feedbackCopiaSpan.classList.remove('feedback-copia-visivel');
+                             feedbackCopiaSpan.classList.add('feedback-copia-oculto');
+                             feedbackCopiaSpan.style.color = "#28a745";
+                         }, 4000);
+                         promptUsuarioTextarea.select();
+                         promptUsuarioTextarea.setSelectionRange(0, 99999);
+                     }
+                 });
+             } else { console.error("Botão Copiar ou elementos associados não encontrados!"); }
 
-            botaoLimparPrompt.addEventListener('click', () => {
-                 // ... (código mantido igual à versão anterior) ...
-            });
+             if (botaoLimparPrompt && promptUsuarioTextarea) {
+                 botaoLimparPrompt.addEventListener('click', () => {
+                     try {
+                         promptUsuarioTextarea.value = '';
+                         const tecnicaAtivaElement = document.querySelector('.botao-tecnica.ativo');
+                         if (tecnicaAtivaElement) {
+                            const tecnicaAtiva = tecnicaAtivaElement.getAttribute('data-tecnica');
+                            if (tecnicaAtiva && dadosTecnicas[tecnicaAtiva] && dadosTecnicas[tecnicaAtiva].builderComponents) {
+                                 document.querySelectorAll('#promptBuilderArea select').forEach(select => select.value = "");
+                                 atualizarPromptComBuilder();
+                            }
+                         }
+                         promptUsuarioTextarea.focus();
+                     } catch (error) {
+                         console.error("Erro ao limpar ou resetar dropdowns:", error);
+                         promptUsuarioTextarea.value = '';
+                         promptUsuarioTextarea.focus();
+                     }
+                 });
+            } else { console.error("Botão Limpar ou textarea não encontrados!"); }
             // --- Fim da Lógica do Playground ---
 
 
-            // --- LÓGICA DO QUIZ (Perguntas focadas em imagens, testando técnicas originais) ---
+            // --- LÓGICA DO QUIZ ---
+             // ****** COLAR AQUI O ARRAY perguntasQuiz COMPLETO DA RESPOSTA ANTERIOR ******
+             // (Incluindo as perguntas de 1 a 24 já corrigidas)
             const perguntasQuiz = [
-                // Pergunta sobre Clareza em Imagens
-                { tipo: 'escolha_melhor', pergunta: "Para obter uma imagem clara de um 'pássaro azul numa árvore', qual prompt demonstra melhor a técnica de Instruções Claras?", opcoes: [ { texto: "pássaro", isPrompt: true }, { texto: "pássaro azul numa árvore", isPrompt: true }, { texto: "Um pequeno pássaro azul vibrante (tipo Blue Jay) pousado num ramo de carvalho com folhas verdes, fundo ligeiramente desfocado, luz da manhã", isPrompt: true }, { texto: "animal numa árvore", isPrompt: true } ], respostaCorreta: 2, explicacao: "A clareza vem da especificação do tipo de pássaro, cor, ação, árvore, fundo e luz." },
+                 // Clareza (3)
+                 { tipo: 'escolha_melhor', pergunta: "Para obter uma imagem clara de um 'pássaro azul numa árvore', qual prompt demonstra melhor a técnica de Instruções Claras?", opcoes: [ { texto: "pássaro", isPrompt: true }, { texto: "pássaro azul numa árvore", isPrompt: true }, { texto: "Um pequeno pássaro azul vibrante (tipo Blue Jay) pousado num ramo de carvalho com folhas verdes, fundo ligeiramente desfocado, luz da manhã", isPrompt: true }, { texto: "animal numa árvore", isPrompt: true } ], respostaCorreta: 2, explicacao: "A clareza vem da especificação do tipo de pássaro, cor, ação, árvore, fundo e luz." },
                 { tipo: 'identifica_tecnica', pergunta: "Ao adicionar 'com pelo macio e branco, olhos azuis penetrantes' a um prompt de 'gato', qual técnica está a aplicar principalmente?", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Formato" }, { texto: "Instruções Claras (Detalhe)" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "Está a adicionar detalhes específicos para clarificar a aparência do assunto." },
-
-                // Pergunta sobre Contexto em Imagens
+                { tipo: 'spot_the_flaw', pergunta: "Instrução: Desenha um carro. Porque é que esta instrução viola o princípio da Clareza?", prompt_na_pergunta: null, opcoes: [ { texto: "Não especifica a cor" }, { texto: "Não especifica o estilo (cartoon, foto)" }, { texto: "Falta tipo de carro, marca, ano, estado (novo/velho)" }, { texto: "Todas as anteriores contribuem para a falta de detalhe e clareza." } ], respostaCorreta: 3, explicacao: "A falta de detalhes sobre o tipo de carro, cor, estilo, etc., deixa muitas opções em aberto para a IA." },
+                // Contexto (3)
                 { tipo: 'escolha_melhor', pergunta: "Quer um 'guerreiro solitário'. Qual prompt estabelece melhor o Contexto para uma imagem atmosférica?", opcoes: [ { texto: "guerreiro solitário", isPrompt: true }, { texto: "guerreiro com espada", isPrompt: true }, { texto: "Guerreiro solitário em armadura desgastada, de pé no topo de uma colina ventosa ao pôr do sol, céu carregado de nuvens, atmosfera melancólica", isPrompt: true }, { texto: "homem sozinho", isPrompt: true } ], respostaCorreta: 2, explicacao: "O contexto (colina, pôr do sol, céu, atmosfera) é crucial para a imagem." },
                 { tipo: 'identifica_tecnica', pergunta: "Incluir 'numa rua chuvosa de Tóquio à noite, com reflexos néon' num prompt de 'pessoa com guarda-chuva' aplica qual técnica?", prompt_na_pergunta: null, opcoes: [ { texto: "Instruções Claras" }, { texto: "Contexto" }, { texto: "Exemplos (Few-Shot)" }, { texto: "Iteração" } ], respostaCorreta: 1, explicacao: "Define o cenário, a hora, o tempo e o local, fornecendo contexto." },
-
-                // Pergunta sobre Formato em Imagens (Estilo/Técnica)
+                { tipo: 'spot_the_flaw', pergunta: "Instrução: Robot a andar. A IA gera o robot num fundo branco. Se o objetivo era uma cena urbana, qual técnica falhou?", prompt_na_pergunta: null, opcoes: [ { texto: "Clareza (detalhes do robot)" }, { texto: "Formato (estilo)" }, { texto: "Contexto (faltou definir o cenário)" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "O contexto (o cenário urbano) não foi fornecido." },
+                 // Formato (3)
                  { tipo: 'escolha_melhor', pergunta: "Para pedir uma imagem que pareça um desenho técnico, qual especificação de Formato é mais adequada?", opcoes: [ { texto: "desenho", isPrompt: true }, { texto: "imagem técnica", isPrompt: true }, { texto: "esboço de arquitetura", isPrompt: true }, { texto: "desenho blueprint, linhas finas azuis sobre fundo branco, vista isométrica", isPrompt: true } ], respostaCorreta: 3, explicacao: "Especifica o formato exato ('blueprint'), cores, linhas e vista, definindo o output visual." },
-                 { tipo: 'identifica_tecnica', pergunta: "Ao especificar `--ar 16:9` ou `aspect ratio 16:9` num prompt, está a usar a técnica de:", prompt_na_pergunta: null, opcoes: [ { texto: "Persona" }, { texto: "Formato (Especificação Técnica)" }, { texto: "Contexto" }, { texto: "Step-back Prompting" } ], respostaCorreta: 1, explicacao: "Define um aspeto técnico do formato da imagem final." },
-
-                // Pergunta sobre Exemplos (Referências) em Imagens
+                 { tipo: 'identifica_tecnica', pergunta: "Ao especificar '--ar 16:9' ou 'aspect ratio 16:9' num prompt, está a usar a técnica de:", prompt_na_pergunta: null, opcoes: [ { texto: "Persona" }, { texto: "Formato (Especificação Técnica)" }, { texto: "Contexto" }, { texto: "Step-back Prompting" } ], respostaCorreta: 1, explicacao: "Define um aspeto técnico do formato da imagem final." },
+                 { tipo: 'spot_the_flaw', pergunta: "Instrução: Retrato de homem. A IA gera uma fotografia. Se queria uma pintura a óleo, qual técnica de Formato faltou especificar?", prompt_na_pergunta: null, opcoes: [ { texto: "Relação de Aspeto" }, { texto: "Estilo / Meio Artístico (ex: 'pintura a óleo')" }, { texto: "Nível de detalhe" }, { texto: "Ângulo da câmara" } ], respostaCorreta: 1, explicacao: "Faltou especificar o meio artístico desejado como parte do formato." },
+                 // Exemplos (Few-Shot) / Referências (3)
                 { tipo: 'escolha_melhor', pergunta: "Quer uma ilustração infantil fofa. Como pode usar a técnica de Exemplos (Referências)?", opcoes: [ { texto: "ilustração fofa", isPrompt: true }, { texto: "desenho para crianças", isPrompt: true }, { texto: "coelho sorridente a segurar uma cenoura, no estilo de ilustração de Beatrix Potter", isPrompt: true }, { texto: "coelho feliz", isPrompt: true } ], respostaCorreta: 2, explicacao: "Referenciar um ilustrador conhecido (Beatrix Potter) serve como um exemplo visual do estilo pretendido." },
-                { tipo: 'identifica_tecnica', pergunta: "Pedir uma imagem `no estilo de pintura de Salvador Dali` aplica qual técnica?", prompt_na_pergunta: null, opcoes: [ { texto: "Instruções Claras" }, { texto: "Contexto" }, { texto: "Exemplos (Referências)" }, { texto: "Formato" } ], respostaCorreta: 2, explicacao: "Usa um artista como exemplo/referência para definir o estilo surrealista." },
-
-                 // Pergunta sobre Persona/Papel em Imagens
+                { tipo: 'identifica_tecnica', pergunta: "Pedir uma imagem no estilo de pintura de Salvador Dali aplica qual técnica?", prompt_na_pergunta: null, opcoes: [ { texto: "Instruções Claras" }, { texto: "Contexto" }, { texto: "Exemplos (Referências)" }, { texto: "Formato" } ], respostaCorreta: 2, explicacao: "Usa um artista como exemplo/referência para definir o estilo surrealista." },
+                { tipo: 'conceito', pergunta: "Por que usar referências (artistas, estilos, obras) é eficaz na geração de imagens?", prompt_na_pergunta: false, opcoes: [ { texto: "Porque limita a criatividade da IA." }, { texto: "Porque a IA reconhece esses nomes e tenta imitar as características visuais associadas, funcionando como um 'exemplo'." }, { texto: "Porque garante sempre uma cópia exata." }, { texto: "Porque melhora a resolução da imagem." } ], respostaCorreta: 1, explicacao: "As referências funcionam como 'exemplos' visuais que a IA pode usar para guiar o estilo e o 'mood'." },
+                 // Persona / Papel (2)
                  { tipo: 'escolha_melhor', pergunta: "Como poderia usar a técnica de Persona para gerar um design de personagem de fantasia original?", opcoes: [ { texto: "personagem de fantasia", isPrompt: true }, { texto: "desenha um elfo", isPrompt: true }, { texto: "Age como um artista conceptual de jogos de fantasia e cria um design único para um 'Druida do Deserto', detalhando o seu traje e acessórios", isPrompt: true }, { texto: "elfo com arco", isPrompt: true } ], respostaCorreta: 2, explicacao: "Define o 'papel' da IA (artista conceptual) e dá uma tarefa específica dentro desse papel." },
-                 { tipo: 'identifica_tecnica', pergunta: "A instrução `cria uma imagem como se fosses um fotógrafo de natureza a capturar um momento raro` está a usar principalmente a técnica de:", prompt_na_pergunta: null, opcoes: [ { texto: "Formato" }, { texto: "Persona / Papel" }, { texto: "Contexto" }, { texto: "Exemplos" } ], respostaCorreta: 1, explicacao: "Atribui um papel específico (fotógrafo de natureza) à IA para influenciar a perspetiva e possivelmente o estilo." },
-
-                 // Pergunta sobre Passo-a-Passo (Iteração) em Imagens
-                 { tipo: 'conceito', pergunta: "Gerou uma imagem base de 'floresta'. Qual seria um bom segundo passo (Iteração) para adicionar um elemento mágico?", opcoes: [ { texto: "Tentar 'floresta mágica' do zero." }, { texto: "Adicionar ao prompt inicial: ', com cogumelos gigantes brilhantes e um unicórnio escondido entre as árvores'." }, { texto: "Pedir a mesma imagem em estilo diferente." }, { texto: "Aumentar o contraste da imagem." } ], respostaCorreta: 1, explicacao: "A iteração envolve refinar o prompt adicionando os novos elementos desejados à descrição existente." },
-                 { tipo: 'identifica_tecnica', pergunta: "Começar com `céu azul` e depois gerar `céu azul com nuvens brancas fofas` e depois `céu azul com nuvens e um avião a jato a passar` demonstra qual processo?", prompt_na_pergunta: null, opcoes: [ { texto: "Few-Shot Learning" }, { texto: "Step-back Prompting" }, { texto: "Iteração (Passo-a-Passo)" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "Mostra a construção gradual e o refinamento da imagem através de prompts sucessivos." },
-
-                 // Pergunta sobre Step-back Prompting (Conceptualização) em Imagens
+                 { tipo: 'identifica_tecnica', pergunta: "A instrução 'cria uma imagem como se fosses um fotógrafo de naturea a capturar um momento raro' está a usar principalmente a técnica de:", prompt_na_pergunta: false, opcoes: [ { texto: "Formato" }, { texto: "Persona / Papel" }, { texto: "Contexto" }, { texto: "Exemplos" } ], respostaCorreta: 1, explicacao: "Atribui um papel específico (fotógrafo de natureza) à IA para influenciar a perspetiva e possivelmente o estilo." },
+                 // Passo-a-Passo (Iteração) (2)
+                 { tipo: 'conceito', pergunta: "Gerou uma imagem base de 'floresta'. Qual seria um bom segundo passo (Iteração / Passo-a-Passo) para adicionar um elemento mágico?", opcoes: [ { texto: "Tentar 'floresta mágica' do zero." }, { texto: "Adicionar ao prompt inicial: ', com cogumelos gigantes brilhantes e um unicórnio escondido entre as árvores'." }, { texto: "Pedir a mesma imagem em estilo diferente." }, { texto: "Aumentar o contraste da imagem." } ], respostaCorreta: 1, explicacao: "A iteração envolve refinar o prompt adicionando os novos elementos desejados à descrição existente, como num processo passo-a-passo." },
+                 { tipo: 'identifica_tecnica', pergunta: "Começar com `céu azul` e depois gerar `céu azul com nuvens brancas fofas` e depois `céu azul com nuvens e um avião a jato a passar` demonstra qual processo?", prompt_na_pergunta: false, opcoes: [ { texto: "Few-Shot Learning" }, { texto: "Step-back Prompting" }, { texto: "Passo-a-Passo (Iteração)" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "Mostra a construção gradual e o refinamento da imagem através de prompts sucessivos, como um processo passo-a-passo." },
+                 // Step-back Prompting (Conceptualização) (2)
                  { tipo: 'conceito', pergunta: "Antes de pedir 'um robô triste na chuva', pensar 'Quero evocar solidão e tecnologia obsoleta' é um exemplo de qual abordagem?", opcoes: [ { texto: "Definir Formato" }, { texto: "Step-back Prompting (Conceptualização)" }, { texto: "Prompt Negativo" }, { texto: "Iteração" } ], respostaCorreta: 1, explicacao: "É pensar no conceito ou emoção geral ('dar um passo atrás') antes de detalhar a cena específica." },
                  { tipo: 'escolha_melhor', pergunta: "Quer uma imagem que represente 'caos urbano'. Qual prompt aplica melhor a ideia de conceptualizar primeiro (Step-back)?", opcoes: [ { texto: "cidade caótica", isPrompt: true }, { texto: "carros e pessoas na rua", isPrompt: true }, { texto: "Representação visual do caos urbano: trânsito intenso, multidões apressadas, edifícios sobrepostos, poluição visual, estilo 'gritty' (realista e sujo)", isPrompt: true }, { texto: "rua movimentada", isPrompt: true } ], respostaCorreta: 2, explicacao: "Começa pelo conceito ('Representação visual do caos urbano') e depois detalha elementos que o evocam." },
-
-                 // Pergunta sobre Instruções vs Restrições (Prompts Negativos) em Imagens
+                 // Instruções vs Restrições (Prompts Negativos) (2)
                  { tipo: 'escolha_melhor', pergunta: "Quer uma fotografia de retrato limpa, sem elementos a distrair. Qual instrução é mais eficaz usando Instruções Positivas e Restrições (Negativas)?", opcoes: [ { texto: "retrato de mulher", isPrompt: true }, { texto: "Não quero fundo confuso", isPrompt: false }, { texto: "Retrato de mulher sorridente, fundo simples e desfocado (bokeh), boa iluminação --no outras pessoas, objetos, texto", isPrompt: true }, { texto: "Foca na mulher", isPrompt: false } ], respostaCorreta: 2, explicacao: "Combina instruções positivas (fundo desfocado, boa iluminação) com negativas (--no) para obter o resultado." },
-                 { tipo: 'identifica_tecnica', pergunta: "Adicionar <code>--no deformed fingers, extra limbs</code> a um prompt de 'pessoa' é um exemplo de:", prompt_na_pergunta: null, opcoes: [ { texto: "Contexto" }, { texto: "Instruções vs. Restrições (Prompt Negativo)" }, { texto: "Formato" }, { texto: "Persona" } ], respostaCorreta: 1, explicacao: "Usa restrições (negativas) para evitar problemas comuns na geração de anatomia." },
-
-                 // Pergunta sobre Iteração e Documentação em Imagens
+                 { tipo: 'identifica_tecnica', pergunta: "Adicionar '--no deformed fingers, extra limbs' a um prompt de 'pessoa' é um exemplo de:", prompt_na_pergunta: false, opcoes: [ { texto: "Contexto" }, { texto: "Instruções vs. Restrições (Prompt Negativo)" }, { texto: "Formato" }, { texto: "Persona" } ], respostaCorreta: 1, explicacao: "Usa restrições (negativas) para evitar problemas comuns na geração de anatomia." },
+                 // Iteração e Documentação (2)
                  { tipo: 'conceito', pergunta: "Qual a importância de documentar os prompts que geraram imagens interessantes?", opcoes: [ { texto: "Não tem importância, a IA é aleatória." }, { texto: "Apenas para cumprir regras." }, { texto: "Para aprender que combinações de palavras-chave, estilos e parâmetros funcionam bem e poder reutilizá-los ou adaptá-los.", isPrompt: false }, { texto: "Para treinar a IA com esses prompts." } ], respostaCorreta: 2, explicacao: "Documentar ajuda a aprender, reutilizar e otimizar o processo de criação de imagens." },
-                 // Adicionar mais 30 perguntas variadas, focando nos 9 conceitos aplicados a imagens...
-                 // (Devido à limitação de tamanho, não consigo gerar mais 30 perguntas únicas e de qualidade aqui,
-                 // mas o código está pronto para as receber se as adicionar ao array 'perguntasQuiz')
-                 // Exemplo de mais algumas:
-                 { tipo: 'spot_the_flaw', pergunta: "Prompt: `gato` vs `gato preto`. Porque é o segundo melhor para Clareza?", prompt_na_pergunta: false, opcoes: [ { texto: "Usa menos palavras" }, { texto: "Especifica a cor, reduzindo ambiguidade" }, { texto: "É mais criativo" }, { texto: "Define o cenário" } ], respostaCorreta: 1, explicacao: "Adicionar a cor é um detalhe específico que clarifica o pedido." },
-                 { tipo: 'identifica_tecnica', pergunta: "A parte `numa noite escura e tempestuosa` refere-se principalmente a:", prompt_na_pergunta: false, opcoes: [ { texto: "Assunto" }, { texto: "Formato" }, { texto: "Contexto/Cenário" }, { texto: "Persona" } ], respostaCorreta: 2, explicacao: "Descreve o ambiente e condições atmosféricas." },
-                 { tipo: 'escolha_melhor', pergunta: "Qual prompt é melhor para um estilo de arte abstrata?", opcoes: [ { texto: "arte", isPrompt: true }, { texto: "pintura colorida", isPrompt: true }, { texto: "Composição abstrata com formas geométricas sobrepostas, cores primárias vibrantes, textura de tela", isPrompt: true }, { texto: "imagem sem sentido", isPrompt: true } ], respostaCorreta: 2, explicacao: "Define o estilo (abstrata), elementos (formas geométricas), cores e textura." },
-                 { tipo: 'identifica_tecnica', pergunta: "Usar `fotografia cinematográfica` define o quê principalmente?", prompt_na_pergunta: false, opcoes: [ { texto: "O assunto" }, { texto: "A relação de aspeto" }, { texto: "O Estilo e Qualidade" }, { texto: "O artista de referência" } ], respostaCorreta: 2, explicacao: "Refere-se a um estilo visual associado a filmes, influenciando iluminação, composição e 'mood'." },
-                  // ... (Adicionar mais ~26 perguntas aqui para totalizar 50) ...
-                 // Última pergunta (exemplo nº 24)
-                 { tipo: 'conceito', pergunta: "O que significa 'Iterar' no contexto de prompt engineering para imagens?", prompt_na_pergunta: false, opcoes: [ { texto: "Gerar a mesma imagem muitas vezes" }, { texto: "Usar sempre os mesmos prompts" }, { texto: "Ajustar e refinar o prompt com base nos resultados anteriores" }, { texto: "Pedir ajuda a outra pessoa" } ], respostaCorreta: 2, explicacao: "Iterar é o processo de tentativa, análise e refinamento do prompt." }
-
-
+                 { tipo: 'conceito', pergunta: "O que significa 'Iterar' no contexto de prompt engineering para imagens?", prompt_na_pergunta: false, opcoes: [ { texto: "Gerar a mesma imagem muitas vezes" }, { texto: "Usar sempre os mesmos prompts" }, { texto: "Ajustar e refinar o prompt com base nos resultados anteriores" }, { texto: "Pedir ajuda a outra pessoa" } ], respostaCorreta: 2, explicacao: "Iterar é o processo de tentativa, análise e refinamento do prompt, fundamental nesta técnica." }
             ];
 
 
@@ -482,20 +489,17 @@
                 feedbackDiv.className = 'feedback';
                 botaoProximo.textContent = "Verificar";
                 botaoProximo.disabled = true;
-                 const totalPerguntas = perguntasQuiz.length; // Recalcular a cada chamada
-                 // Título Atualizado PT-PT e contador dinâmico
+                const totalPerguntas = perguntasQuiz.length;
                 document.querySelector('#quiz h2').innerHTML = `<i class="fas fa-graduation-cap"></i> Testa os teus conhecimentos adquiridos (${perguntaAtualIndex + 1}/${totalPerguntas})`;
 
-                if (perguntaAtualIndex < totalPerguntas) { // Verifica se ainda há perguntas
+                if (perguntaAtualIndex < totalPerguntas) {
                     const perguntaAtual = perguntasQuiz[perguntaAtualIndex];
                     let questaoHTML = `<p>${perguntaAtualIndex + 1}. ${escapeHTML(perguntaAtual.pergunta)}`;
-                     // Verifica se a pergunta já contem o prompt (raro agora) ou se deve usar prompt_na_pergunta
-                     if (perguntaAtual.prompt_na_pergunta) {
-                          if (!perguntaAtual.pergunta.endsWith(' ')) questaoHTML += ' '; // Adiciona espaço se necessário
-                         questaoHTML += `<pre><code>${escapeHTML(perguntaAtual.prompt_na_pergunta)}</code></pre>`;
-                     }
+                    if (perguntaAtual.prompt_na_pergunta) {
+                         if (!perguntaAtual.pergunta.endsWith(' ')) questaoHTML += ' ';
+                        questaoHTML += `<pre><code>${escapeHTML(perguntaAtual.prompt_na_pergunta)}</code></pre>`;
+                    }
                      questaoHTML += `</p>`;
-
                     questaoDiv.innerHTML = questaoHTML;
 
                     opcoesDiv.innerHTML = '';
@@ -519,7 +523,7 @@
                     });
                     botaoProximo.onclick = verificarResposta;
                 } else {
-                    mostrarResultado(); // Chama se não houver mais perguntas
+                    mostrarResultado();
                 }
             }
 
@@ -527,7 +531,6 @@
                  if (respostaSelecionada) return;
                  respostaSelecionada = true;
                  const perguntaAtual = perguntasQuiz[perguntaAtualIndex];
-                 // Verifica se perguntaAtual existe antes de aceder a propriedades
                  if (!perguntaAtual) return;
                  const indiceEscolhido = parseInt(botaoProximo.dataset.opcaoEscolhidaIndex);
                  const indiceCorreto = perguntaAtual.respostaCorreta;
@@ -559,32 +562,26 @@
                  carregarPergunta();
             }
 
-             function mostrarResultado() {
-                 // Calcula o total real de perguntas no array para evitar erros
+            function mostrarResultado() {
                  const totalPerguntasReal = perguntasQuiz.length;
                  document.querySelector('#quiz h2').innerHTML = `<i class="fas fa-check-circle"></i> Quiz Terminado!`;
-                 quizContainer.innerHTML = ''; // Limpa área do quiz
+                 quizContainer.innerHTML = '';
                  let mensagemFinal = "";
-                 // Calcula percentagem com base no total real
                  const percentagem = totalPerguntasReal > 0 ? (pontuacao / totalPerguntasReal) * 100 : 0;
-
                  if (percentagem >= 80) { mensagemFinal = "Excelente! Parece que tens olho para criar prompts visuais eficazes!"; }
                  else if (percentagem >= 50) { mensagemFinal = "Bom resultado! A prática leva à perfeição na arte visual."; }
                  else { mensagemFinal = "Continua a experimentar! A chave é combinar técnicas e refinar."; }
-
-                 resultadoFinalDiv.innerHTML = `
-                    <h2><i class="fas fa-check-circle"></i> Quiz Terminado!</h2>
-                     <p>A tua pontuação final foi: <strong>${pontuacao}</strong> em ${totalPerguntasReal} (${percentagem.toFixed(0)}%).</p>
-                    <p><em>${escapeHTML(mensagemFinal)}</em></p>
-                    <button onclick="window.location.reload()"><i class="fas fa-redo"></i> Tentar Novamente</button>
-                `;
-                 // Adiciona ao container do quiz, que agora está vazio
+                 resultadoFinalDiv.innerHTML = `<h2><i class="fas fa-check-circle"></i> Quiz Terminado!</h2><p>A tua pontuação final foi: <strong>${pontuacao}</strong> em ${totalPerguntasReal} (${percentagem.toFixed(0)}%).</p><p><em>${escapeHTML(mensagemFinal)}</em></p><button onclick="window.location.reload()"><i class="fas fa-redo"></i> Tentar Novamente</button>`;
                  quizContainer.appendChild(resultadoFinalDiv);
+            }
+
+            // --- Inicialização ---
+             if (typeof dadosTecnicas !== 'undefined' && typeof perguntasQuiz !== 'undefined') {
+                 carregarPergunta(); // Inicia o Quiz
+             } else {
+                 quizContainer.innerHTML = '<p style="color: red; text-align: center;">Erro crítico ao carregar os dados da aplicação. Por favor, verifique o código.</p>';
+                 console.error("Erro Fatal: dadosTecnicas ou perguntasQuiz não estão definidos corretamente no script.");
              }
-
-
-            // Iniciar o Quiz
-            carregarPergunta();
 
         }); // Fim do DOMContentLoaded
     </script>
